@@ -41,6 +41,8 @@ static char	*read_and_store(int fd, char *buffer, char *rest)
 	int		bytes_read;
 
 	bytes_read = 1;
+	if (read(fd, 0, 0) < 0)
+		return (NULL);
 	while (bytes_read != 0)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
@@ -67,9 +69,9 @@ char	*get_next_line(int fd)
 {
 	char		buffer[BUFFER_SIZE + 1];
 	char			*line;
-	static char		*rest;
+	static char		*rest = NULL;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
 	line = read_and_store(fd, buffer, rest);
 	//printf("%s\n", line);
