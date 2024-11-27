@@ -12,17 +12,17 @@ size_t ft_strlen(char *str)
 	return (i);
 }
 
-char	*ft_substr(char *s, unsigned int start, size_t len)
+char	*ft_substr(char **s, unsigned int start, size_t len)
 {
 	char		*substr;
 	size_t		i;
 	size_t		len_sub;
 
-	if (start >= ft_strlen(s))
+	if (start >= ft_strlen(*s))
 		return (NULL);
 	i = 0;
 	substr = NULL;
-	len_sub = ft_strlen(&s[start]);
+	len_sub = ft_strlen((*s) + start);
 	if (len_sub > len)
 	{
 		substr = (char *)malloc(sizeof(char) * len + 1);
@@ -31,10 +31,10 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	else if (len_sub < len)
 		substr = (char *)malloc(sizeof(char) * len_sub + 1);
 	if (!substr)
-		return (feel_free(&substr), feel_free(&s), NULL);
-	while (s[start + i] && i < len_sub)
+		return (feel_free(&substr), free(*s), *s = NULL, NULL);
+	while ((*s)[start + i] && i < len_sub)
 	{
-		substr[i] = s[start + i];
+		substr[i] = (*s)[start + i];
 		i++;
 	}
 	substr[i] = 0;
@@ -63,7 +63,10 @@ char	*ft_strdup(char *s, int fmallok)
 
 	if (!s)
 		return (NULL);
-	dup = (char *)malloc(sizeof(char) * (ft_strlen(s) + 1));
+	i = ft_strlen(s);
+	if (i <= 0)
+		return (NULL);
+	dup = (char *)malloc(sizeof(char) * (i + 1));
 	if (!dup)
 	{
 		if (fmallok != 0)
@@ -79,25 +82,25 @@ char	*ft_strdup(char *s, int fmallok)
 	return (feel_free(&s), dup);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char **s1, char *s2)
 {
 	char	*s_join;
 	int		i;
 	int		j;
 
-	if (s1 && !s2)
+	if (*s1 && !s2)
 		return (NULL);
-	if (!s1 && s2)
-		return (feel_free(&s1), ft_strdup(s2, 0));
+	if (!*s1 && s2)
+		return (feel_free(s1), ft_strdup(s2, 0));
 	i = -1;
 	j = -1;
-	s_join = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	s_join = (char *)malloc(sizeof(char) * (ft_strlen(*s1) + ft_strlen(s2) + 1));
 	if (!s_join)
-		return(feel_free(&s1), feel_free(&s_join), NULL);
-	while (s1[++i])
-		s_join[i] = s1[i];
+		return(feel_free(s1), feel_free(&s_join), NULL);
+	while ((*s1)[++i])
+		s_join[i] = (*s1)[i];
 	while (s2[++j])
 		s_join[i + j] = s2[j];
 	s_join[i + j] = 0;
-	return (feel_free(&s1), s_join);
+	return (feel_free(s1), s_join);
 }
